@@ -3,9 +3,13 @@ name = "crew_project"
 version = "0.1.0"
 description = "crew-project using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.11,<3.13"
 dependencies = [
-    "crewai[tools]>=0.102.0,<1.0.0"
+    "crewai[tools]>=0.102.0,<1.0.0",
+    "docx2txt>=0.9",
+    "notion-client>=2.3.0",
+    "python-docx>=1.1.2",
+    "youtube-transcript-api>=1.0.3",
 ]
 
 [project.scripts]

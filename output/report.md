@@ -1,33 +1,285 @@
-# Informe sobre Tendencias de Blockchain 2025
+# Guía Completa y Actualizada para Escribir Tests Unitarios en Python (2025)
 
-## 1. Decentralized Finance (DeFi) Expansion
-El sector de las Finanzas Descentralizadas (DeFi) está proyectado a crecer significativamente en los próximos años, ofreciendo a los usuarios la posibilidad de acceder a servicios financieros sin necesidad de intermediarios. Este modelo no solo reduce costos y tiempos de transacción, sino que también crea nuevas oportunidades para la inversión y la gestión de activos. Las plataformas DeFi permiten a los usuarios prestar, pedir prestado y generar intereses en sus criptomonedas de manera directa, lo que democratiza el acceso a productos financieros que tradicionalmente requerían un intermediario. Esta expansión corre el riesgo de desafiar los modelos financieros tradicionales y es un aspecto a vigilar en el desarrollo del futuro financiero.
+¡Hey, qué tal, Pythonista curioso! 👋 ¿Alguna vez tocaste tu código, pensaste ‘esto no va a romper nada’, y dos segundos después todo explotó? Hoy vamos a ponerle fin a ese ciclo de terror con **tests unitarios**. Literalmente tu seguro de vida como developer en 2025... ¡y para siempre!
 
-## 2. Better Blockchain Interoperability
-Este año, se están realizando esfuerzos incrementales para mejorar la interoperabilidad entre diferentes redes blockchain. La capacidad de las plataformas para interactuar entre sí permitirá transacciones más fluidas y un mejor intercambio de datos. Esto es crucial para el desarrollo de un ecosistema blockchain más cohesivo, donde los usuarios puedan transferir activos y datos entre diferentes plataformas sin complicaciones. Este avance está preparando el terreno para una nueva era de soluciones innovadoras que cruzan diferentes redes, beneficiando tanto a los usuarios como a las empresas.
+---
 
-## 3. Integration with AI
-La combinación de la inteligencia artificial (IA) con blockchain está abriendo nuevas oportunidades, especialmente en sectores como las finanzas y la logística. La factibilidad de automatizar transacciones y compartir datos de manera segura es una preocupación creciente, y la IA puede facilitar estos procesos. Con sistemas que pueden aprender y adaptarse a medida que operan, la integración puede llevar a una mayor eficiencia y seguridad en las operaciones. Proyectos que combinen estas tecnologías están posicionándose para transformar sectores enteros y ofrecer un valor añadido significativo.
+## 🔥 Introducción: ¿Por qué necesitas tests unitarios?
 
-## 4. Growth of NFTs
-Los tokens no fungibles (NFTs) continúan encontrando aplicaciones más allá del arte digital, expandiendo su rol en diversas industrias como los videojuegos, la música y bienes raíces. Esta tendencia está promoviendo una nueva forma de propiedad y comercialización de activos digitales, lo que podría revolucionar el sector del entretenimiento y más allá. Cada vez más, se están desarrollando plataformas que permiten a los creadores monetizar su trabajo y a los consumidores adquirir activos únicos que pueden ser fácilmente verificados a través de la blockchain.
+Imagina que tu código es como una torre de Jenga después de tres cafés: cada vez que quitas algo (o lo optimizas), tienes miedo de que todo se venga abajo. ¿La solución? ¡Tests unitarios! Así puedes refactorizar, agregar features, o trabajar en equipo sin sudar frío.
 
-## 5. Stablecoins and Central Bank Digital Currencies (CBDCs)
-Los gobiernos están explorando activamente el desarrollo e implementación de monedas digitales emitidas por bancos centrales (CBDCs) como un medio para facilitar transacciones digitales de manera eficiente. Las stablecoins también están en auge, proporcionando la estabilidad que los mercados de criptomonedas necesitan para atraer a un público más amplio. Esto podría resultar en un cambio fundamental en la forma en que percibimos el dinero y las transacciones, conservando al mismo tiempo la estabilidad de los sistemas monetarios existentes.
+En este video te voy a enseñar **qué son los tests unitarios, por qué importan, cuáles frameworks están de moda en 2025 y cómo escribir tus propios tests con Pytest** usando ejemplos claros, directos y (casi) sin drama. Al final, serás capaz de:
+- Escribir tests simples, parametrizados y con mocks.
+- Integrar tus tests con CI/CD como un pro.
+- Evitar los errores más comunes y lograr que tus tests sean útiles de verdad.
 
-## 6. Sustainability in Blockchain
-Con el aumento de las preocupaciones ambientales, muchos proyectos blockchain están priorizando prácticas sostenibles. La transición hacia mecanismos de prueba de participación (proof-of-stake) en lugar del tradicional proof-of-work está ayudando a mitigar la huella de carbono de las operaciones de blockchain. Esta tendencia no solo es beneficiosa para el ambiente, sino que también podría atraer a inversores que valoran la sostenibilidad en sus decisiones de inversión. La adopción de tecnologías más verdes es, por lo tanto, fundamental para el futuro desarrollo de la blockchain.
+¿Listo? Si ya conoces la intro y quieres ir directo al código, salta al minuto [3:27].
 
-## 7. Increased Regulations
-A medida que la popularidad de las tecnologías blockchain crece, se espera que los gobiernos introduzcan regulaciones más exhaustivas para garantizar la seguridad y la protección del consumidor en el espacio cripto. Estas regulaciones, que varían de un país a otro, son cruciales para fomentar un entorno seguro para usuarios e inversores. La regulación también puede proporcionar un marco de confianza para las empresas que buscan adoptar esta tecnología, facilitando su integración en el marco operativo existente.
+---
 
-## 8. Blockchain in Supply Chain Management
-Las empresas están adoptando cada vez más la blockchain para mejorar la transparencia y la trazabilidad en las cadenas de suministro. Esta tecnología permite un seguimiento más adecuado de los productos desde su origen hasta el consumidor final, lo que no solo aumenta la eficiencia, sino que también protege contra el fraude y mejora la garantía de calidad. La implementación de solutions blockchain en la gestión de la cadena de suministro puede resultar en importantes beneficios operativos y reputacionales para las organizaciones.
+## 🧠 ¿Qué son los tests unitarios? (Y por qué a ti sí te importan)
 
-## 9. Expanding Use in Voting Systems
-El uso de blockchain en sistemas de votación está siendo evaluado e implementado con el objetivo de aumentar la integridad y la transparencia de las elecciones. Al permitir un registro inmutable de los votos, la tecnología blockchain puede ayudar a reducir el riesgo de fraudes y errores en el proceso electoral. La adopción de esta tecnología podría fortalecer la confianza pública en los sistemas democráticos, convirtiéndola en una alternativa atractiva en los próximos años.
+Un **test unitario** es como un mini guardia de seguridad para cada función: la examina en aislamiento y se asegura de que hace EXACTAMENTE lo que esperas. Cambias algo y... ¡PUM!, el test te avisa si rompiste algo.
 
-## 10. Career Opportunities in Blockchain
-La demanda de desarrolladores y profesionales de blockchain está en auge, con empresas que buscan especialistas en una variedad de sectores. Este crecimiento de oportunidades laborales representa una opción de carrera lucrativa para quienes poseen habilidades en la tecnología blockchain. La creciente adopción de esta tecnología en múltiples industrias sugiere que el futuro laboral en este campo será brillante, incentivando a más individuos a capacitarse y especializarse en blockchain y criptomonedas. 
+### Ventajas rápidas:
+- Previenen regresiones (errores fantasmas de features pasadas).
+- Facilitan refactorización con confianza.
+- Mejoran la calidad y mantenibilidad del código.
+- Son la base para CI/CD sin miedo.
 
-En resumen, el mundo de blockchain está en constante evolución, y las tendencias actuales sugieren un futuro en el que la tecnología será cada vez más integral en nuestras vidas cotidianas y en la infraestructura de los negocios.
+¿Quién no quiere dormir tranquilo?
+
+---
+
+## 🏆 Los frameworks top para testear en Python en 2025
+
+### 1. **unittest**
+- Parte de la librería estándar (no instalas nada extra).
+- Basado en clases, inspiradísimo en Java.
+- Verboso, pero muy confiable para empezar.
+
+```python
+import unittest
+
+def suma(a, b):
+    return a + b
+
+class TestSum(unittest.TestCase):
+    def test_suma(self):
+        self.assertEqual(suma(2, 3), 5)
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+### 2. **pytest** (el rey en 2025 👑)
+- Sintaxis mucho más fresca y natural (funciones normales, sin clases).
+- Fixture, parametrización y plugins hasta para hacerte un café.
+- Adoptado por startups, unicornios y tu proyecto personal.
+
+```python
+def suma(a, b):
+    return a + b
+
+def test_suma():
+    assert suma(2, 3) == 5
+```
+**Tendencia:** Si inicias algo desde cero hoy, casi seguro usas pytest.
+
+### 3. Otros que debes conocer
+- **nose2**: Fue boom, ahora es más de nicho.
+- **Hypothesis**: Testear propiedades de tu código (genera casos locos automáticamente).
+- **Doctest**: Si te gusta poner tests en los docstrings.
+- **Robot/Behave**: Testing de “aceptación” o historias de usuario.
+
+---
+
+## 🗂️ Organización y estructura de tus tests (¡Esto sí importa!)
+
+- Pon tus tests en carpeta aparte (`tests/`)
+- Nómbralos bien: `test_funcion.py`, `TestMiClase`
+- Un test, una verificación.
+- Reutiliza fixtures y mocks (nada de copiar/pegar archivos gigantes).
+
+**¿Cómo se ve un proyecto bien estructurado?**
+```
+mi_proyecto/
+│
+├── src/
+│    └── mi_modulo.py
+│
+└── tests/
+     ├── __init__.py
+     └── test_mi_modulo.py
+```
+
+---
+
+## ✨ Mejores prácticas para 2025
+
+- Testea temprano y testea SIEMPRE (cada cambio, cada feature)
+- Mantenlos independientes (nada de ‘si falla el anterior ya nada jala’)
+- Cubre casos borde, no solo el happy path.
+- Mocks para lo externo.
+- Automatiza todo en CI/CD.
+- ¡No te vuelvas esclavo de la cobertura! Mejor pocos tests útiles, que muchos inútiles.
+- Refactoriza tests igual que el código real.
+- Usa validación de tipos (`mypy`) cuando puedas.
+
+---
+
+## 🔬 Ejemplos paso a paso con pytest
+
+### 1. **Test básico**
+```python
+def suma(a, b):
+    return a + b
+
+def test_suma():
+    assert suma(2, 3) == 5
+```
+
+### 2. **Tests parametrizados (casos a lo bestia)**
+```python
+import pytest
+
+@pytest.mark.parametrize("a, b, esperado", [
+    (1, 2, 3),
+    (0, 0, 0),
+    (-1, 1, 0),
+])
+def test_suma_parametros(a, b, esperado):
+    assert suma(a, b) == esperado
+```
+
+### 3. **Fixtures (Preparando datos de forma inteligente)**
+```python
+import pytest
+
+@pytest.fixture
+def datos():
+    return {"a": 2, "b": 3}
+
+def test_suma_fixture(datos):
+    assert suma(datos["a"], datos["b"]) == 5
+```
+
+### 4. **Mocks: Simulando lo que no quieres tocar**
+```python
+from unittest.mock import patch
+
+def obtener_precio_apiexterna():
+    raise NotImplementedError  # Simula llamada a API real
+
+def test_obtener_precio(monkeypatch):
+    monkeypatch.setattr("mimodulo.obtener_precio_apiexterna", lambda: 7.5)
+    assert obtener_precio_apiexterna() == 7.5
+```
+¡Y con `pytest-mock`, aún mejor!
+```python
+def test_precio(mocker):
+    mocker.patch("mimodulo.obtener_precio_apiexterna", return_value=8.2)
+    assert obtener_precio_apiexterna() == 8.2
+```
+
+### 5. **Tests pendientes o que DEBEN fallar**
+```python
+import pytest
+
+@pytest.mark.xfail
+def test_funcion_no_implementada():
+    assert funcion_no_hecha() == 10
+
+@pytest.mark.skip(reason="Funcionalidad en desarrollo")
+def test_funcion_en_desarrollo():
+    pass
+```
+
+---
+
+## 🔥 Comparativa ultra–rápida: unittest vs pytest vs el resto
+
+| Característica      | unittest           | pytest           | nose2/Hypothesis |
+|--------------------|--------------------|------------------|------------------|
+| Sintaxis           | Verboso            | Ligero/natural   | Intermedia       |
+| Parametrización    | Manual             | Decoradores      | En plugins       |
+| Fixtures           | setUp/tearDown     | Muy poderosos    | Limitados        |
+| Plugins            | Pocos              | Muchísimos       | Pocos            |
+| Mocking            | mock               | mock/mocker      | Básico           |
+| Cobertura          | Plugin             | pytest-cov       | Limitado         |
+
+Traducción: Para casi todo, prueba primero con pytest ;)
+
+
+---
+
+## 🚀 Automatización, CI/CD y métricas de calidad
+
+- Ejecútalos en cada push/pull request con GitHub Actions, GitLab CI, Jenkins...
+- Ejemplo mínimo con **GitHub Actions:**
+
+```yaml
+name: Python Tests
+
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+      - name: Run tests
+        run: |
+          pytest --cov=src --cov-report=xml
+```
+
+- **Cobertura de código:**
+```sh
+pytest --cov=src tests/
+```
+- **Umbral mínimo recomendado:**
+```sh
+pytest --cov=src --cov-fail-under=85
+```
+
+---
+
+## 💡 Consejos, errores típicos y hacks pro
+
+### Tips
+- Escribe tests atómicos y claros (nada de monstruos de 300 líneas).
+- Asegura feedback rápido: ¡tests veloces o nada!
+- Automatiza hasta la revisión de tests en pre-commit si puedes.
+- Usa `pytest.mark.parametrize` y `hypothesis` para casos de prueba inteligentes.
+
+### Errores mortales
+- Tests que dependen del estado, internet o una DB  (¡aislamiento siempre!).
+- No limpiar recursos tras cada test.
+- Medir “calidad” por cobertura: busca valor, no sólo estadística.
+
+### Casos de uso ideales
+- Validar funciones pequeñitas, cálculos, transformaciones.
+- Verificar validadores y utilidades.
+- Mantener código legacy bajo control sin miedo a cambios.
+
+---
+
+## 🚀 Tendencias y futuro en 2025 (¡No te quedes atrás!)
+
+- **pytest sigue dominando**
+- Combinación de type checking (`mypy`) y testing.
+- Testing por "property–based" (con Hypothesis)
+- Tests en paralelo, en local y CI (¡velocidad total!)
+- Feedback automático con pre-commit y reportería visual en CI con badges (Codecov, etc).
+
+---
+
+## 📚 Recursos recomendados
+- [Documentación oficial de pytest](https://docs.pytest.org/)
+- [pytest-cov (cobertura)](https://pytest-cov.readthedocs.io/en/latest/)
+- [Quick pytest cheatsheet](https://github.com/augustogoulart/pytest-cheat-sheet)
+- [Best Practices for Writing Unit Tests in Python (Medium)](https://medium.com/infosecmatrix/best-practices-for-writing-unit-tests-in-python-cd1da23d3b79)
+- [11 Top Python Testing Frameworks in 2025](https://www.ongraph.com/top-python-testing-frameworks/)
+- [Pytest vs. Unittest en profundidad](https://builtin.com/data-science/pytest-vs-unittest)
+
+---
+
+## 🎬 Cierre poderoso
+
+¡Y listo! Hoy aprendiste desde cero hasta moderno cómo escribir tests unitarios en Python como se hace HOY (bueno, en 2025). Vimos frameworks, prácticas y hasta integración en el mundo real.
+
+**Resumen flash:**
+1. Tests te salvan la vida dev (y la de tu equipo)
+2. Unittest si quieres clásico, PYTEST si quieres un superpoder.
+3. Automatiza, innova y duerme en paz.
+
+¿Te sirvió el video? Dale like, suscríbete y cuéntame en los comentarios qué testing nightmare has superado últimamente…
+
+¡Nos vemos en el próximo video! Y mientras tanto… ¡Testea TODO! 🐍💥

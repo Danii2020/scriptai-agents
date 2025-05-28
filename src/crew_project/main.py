@@ -4,7 +4,7 @@ import warnings
 
 from datetime import datetime
 
-from crew_project.crew import LatestTechAnalysis
+from crew_project.crew import YouTubeScript
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -18,28 +18,29 @@ def run():
     Run the crew.
     """
     inputs = {
-        'topic': 'Blockchain',
+        'topic': input("Write a topic for a YouTube video: "),
+        'youtube_video_url': "",
         'current_year': str(datetime.now().year)
     }
-    
     try:
-        LatestTechAnalysis().crew().kickoff(inputs=inputs)
+        YouTubeScript().crew().kickoff(inputs=inputs)
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 
 
-# def train():
-#     """
-#     Train the crew for a given number of iterations.
-#     """
-#     inputs = {
-#         "topic": "AI LLMs"
-#     }
-#     try:
-#         CrewProject().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+def train():
+    """
+    Train the crew for a given number of iterations.
+    """
+    inputs = {
+        "topic": "Cómo escribir unit tests en python con pytest",
+        "current_year": str(datetime.now().year)
+    }
+    try:
+        YouTubeScript().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
-#     except Exception as e:
-#         raise Exception(f"An error occurred while training the crew: {e}")
+    except Exception as e:
+        raise Exception(f"An error occurred while training the crew: {e}")
 
 # def replay():
 #     """
@@ -51,15 +52,17 @@ def run():
 #     except Exception as e:
 #         raise Exception(f"An error occurred while replaying the crew: {e}")
 
-# def test():
-#     """
-#     Test the crew execution and returns the results.
-#     """
-#     inputs = {
-#         "topic": "AI LLMs"
-#     }
-#     try:
-#         CrewProject().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
+def test():
+    """
+    Test the crew execution and returns the results.
+    """
+    inputs = {
+        "topic": "Cómo escribir unit tests en python con pytest",
+        "current_year": str(datetime.now().year),
+        "youtube_video_url": "https://www.youtube.com/watch?v=JZ0TMkwMgp8"
+    }
+    try:
+        YouTubeScript().crew().test(n_iterations=int(sys.argv[1]), eval_llm="gpt-4.1", inputs=inputs)
 
-#     except Exception as e:
-#         raise Exception(f"An error occurred while testing the crew: {e}")
+    except Exception as e:
+        raise Exception(f"An error occurred while testing the crew: {e}")
