@@ -52,7 +52,7 @@ class YouTubeScript():
 		return Agent(
 			config=self.agents_config['screenwriter'],
 			verbose=True,
-			tools=[DocxReadTool("/Users/danielerazo/Documents/yt-scripts/script-template-en.docx")],
+			tools=[DocxReadTool()],
 			allow_delegation=True
 		)
 

@@ -24,8 +24,9 @@ research_task:
 
 screenwriting_task:
   description: >
-    Review the obtained context and also look for the structure of a script
-    within the base script you will use as a reference. Pay particular attention
+    Review the obtained context and also look for the structure of the script in the
+    path {file_path} within the base script you will use as a reference, remember to
+    use the {file_path} as a parameter of the `@DOCXReadTool` too. Pay particular attention
     to the tone and structure of that script to create a similar one using the
     new context. Write a script in a {tones} tone, as only you know how, based on that information
     and the previous script.

@@ -1,5 +1,6 @@
 from datetime import datetime
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+import shutil
+from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
@@ -8,6 +9,7 @@ from .crew import YouTubeScript
 import uuid
 from enum import Enum
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -15,6 +17,10 @@ load_dotenv()
 
 # Get allowed origins from environment variable or use default
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
+# Create temp directory if it doesn't exist
+TEMP_DIR = Path("temp_uploads")
+TEMP_DIR.mkdir(exist_ok=True)
 
 app = FastAPI(
     title="YouTube Script Generator API",
@@ -42,47 +48,77 @@ class TaskStatus(str, Enum):
     COMPLETED = "completed"
     FAILED = "failed"
 
-class ScriptRequest(BaseModel):
-    topic: str
-    tones: List[str] = ["professional"]  # Default to professional tone
-    additional_context: Optional[Dict[str, Any]] = None
-
 class ScriptResponse(BaseModel):
     task_id: str
     status: TaskStatus
     result: Optional[str] = None
     error: Optional[str] = None
 
-async def run_crew_task(task_id: str, topic: str, tones: List[str]):
+async def save_upload_file(upload_file: UploadFile) -> str:
+    """Save the uploaded file to a temporary location and return the path"""
+    try:
+        # Create a unique filename
+        file_extension = Path(upload_file.filename).suffix
+        if file_extension.lower() != '.docx':
+            raise HTTPException(status_code=400, detail="Only .docx files are allowed")
+            
+        temp_file_path = TEMP_DIR / f"{uuid.uuid4()}{file_extension}"
+        
+        # Save the file
+        with temp_file_path.open("wb") as buffer:
+            shutil.copyfileobj(upload_file.file, buffer)
+            
+        return str(temp_file_path)
+    finally:
+        upload_file.file.close()
+
+async def run_crew_task(task_id: str, topic: str, tones: List[str], file_path: Optional[str]):
     try:
         tasks[task_id]["status"] = TaskStatus.RUNNING
         crew_instance = YouTubeScript().crew()
         result = await crew_instance.kickoff_async(inputs={
             "topic": topic, 
             "current_year": str(datetime.now().year),
-            "tones": ", ".join(tones)  # Join tones into a comma-separated string
+            "tones": ", ".join(tones),  # Join tones into a comma-separated string
+            "file_path": file_path
         })
         tasks[task_id].update({
             "status": TaskStatus.COMPLETED,
             "result": result.tasks_output[1].raw
         })
     except Exception as e:
+        breakpoint()
         tasks[task_id].update({
             "status": TaskStatus.FAILED,
             "error": str(e)
         })
+    finally:
+        # Clean up the temporary file if it exists and is not the default path
+        if file_path and file_path != "/Users/danielerazo/Documents/yt-scripts/script-template-en.docx":
+            try:
+                os.remove(file_path)
+            except:
+                pass  # Ignore errors during cleanup
 
 @app.post("/generate-script", response_model=ScriptResponse)
-async def generate_script(request: ScriptRequest, background_tasks: BackgroundTasks):
+async def generate_script(
+    topic: str = Form(...),
+    tones: List[str] = Form(["professional"]),
+    file_name: Optional[UploadFile] = File(None),
+    background_tasks: BackgroundTasks = BackgroundTasks()
+):
     task_id = str(uuid.uuid4())
     tasks[task_id] = {
         "status": TaskStatus.PENDING,
         "result": None,
         "error": None
     }
-    
-    background_tasks.add_task(run_crew_task, task_id, request.topic, request.tones)
-    
+
+    file_path = "/Users/danielerazo/Documents/yt-scripts/script-template-en.docx"
+    if file_name:
+        file_path = await save_upload_file(file_name)
+    background_tasks.add_task(run_crew_task, task_id, topic, tones, file_path)
+
     return ScriptResponse(
         task_id=task_id,
         status=TaskStatus.PENDING
