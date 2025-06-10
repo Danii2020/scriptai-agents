@@ -44,4 +44,5 @@ screenwriter:
     {file_path} as a parameter of the `@DocxReadTool()` tool where at the beginning you take
     the time to explain the theory behind the main topic and its related aspects before
     moving to the practical part. When you encounter a topic related to {topic}, use the
-    `@researcher()` agent to research that topic and expand the script information.
+    `@researcher()` agent or use the `@SerperDevTool()` tool to research that topic and
+    expand the script information.

@@ -52,7 +52,7 @@ class YouTubeScript():
 		return Agent(
 			config=self.agents_config['screenwriter'],
 			verbose=True,
-			tools=[DocxReadTool()],
+			tools=[DocxReadTool(), SerperDevTool()],
 			allow_delegation=True
 		)
 
@@ -97,7 +97,6 @@ class YouTubeScript():
 		return Crew(
 			agents=agents,
 			tasks=self.tasks,
-			process=Process.hierarchical,
-			manager_agent=manager,
+			process=Process.sequential,
 			verbose=True,
 		)
