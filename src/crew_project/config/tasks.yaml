@@ -30,8 +30,8 @@ screenwriting_task:
     to the tone and structure of that script to create a similar one using the
     new context. Write a script in a {tones} tone, as only you know how, based on that information
     and the previous script.
-    # Use the `@notion_tool()` to create a page and save
-    # the title and content of the script.
+    Use the `@notion_tool_langgraph()` to create a page and save
+    the title and content of the script when this is completely finished.
   expected_output: >
     An engaging, interesting, fun, and educational script for a YouTube video
     written in a {tones} tone. Return the video title and the content formatted as markdown without '```'.

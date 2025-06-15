@@ -4,18 +4,16 @@ from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, F
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
+from typing import Optional, List
 import asyncio
-from .crew import YouTubeScript
 import uuid
 from enum import Enum
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 from docx import Document
-from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-import tempfile
+from .langgraph_workflow import run_youtube_script_workflow
 
 # Load environment variables
 load_dotenv()
@@ -103,21 +101,19 @@ def create_script_docx(script_content: str, topic: str) -> str:
     doc.save(file_path)
     return str(file_path)
 
-async def run_crew_task(task_id: str, topic: str, tones: List[str], file_path: Optional[str]):
+
+async def run_langgraph_task(task_id: str, topic: str, tones: List[str], file_path: Optional[str]):
     try:
         tasks[task_id]["status"] = TaskStatus.RUNNING
-        crew_instance = YouTubeScript().crew()
-        result = await crew_instance.kickoff_async(inputs={
-            "topic": topic, 
-            "current_year": str(datetime.now().year),
-            "tones": ", ".join(tones),
-            "file_path": file_path
-        })
-        
-        # Generate DOCX file
-        script_content = result.tasks_output[1].raw
+        # Run the new LangGraph workflow (sync for now; wrap in thread if needed)
+        script_content = await asyncio.to_thread(
+            run_youtube_script_workflow,
+            topic=topic,
+            tones=", ".join(tones),
+            file_path=file_path,
+            current_year=str(datetime.now().year)
+        )
         docx_path = create_script_docx(script_content, topic)
-        
         tasks[task_id].update({
             "status": TaskStatus.COMPLETED,
             "result": script_content,
@@ -129,12 +125,11 @@ async def run_crew_task(task_id: str, topic: str, tones: List[str], file_path: O
             "error": str(e)
         })
     finally:
-        # Clean up the temporary file if it exists and is not the default path
         if file_path and file_path != "/Users/danielerazo/Documents/yt-scripts/script-template-en.docx":
             try:
                 os.remove(file_path)
             except:
-                pass  # Ignore errors during cleanup
+                pass
 
 @app.post("/generate-script", response_model=ScriptResponse)
 async def generate_script(
@@ -153,7 +148,7 @@ async def generate_script(
     file_path = "/Users/danielerazo/Documents/yt-scripts/script-template-en.docx"
     if file_name:
         file_path = await save_upload_file(file_name)
-    background_tasks.add_task(run_crew_task, task_id, topic, tones, file_path)
+    background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path)
 
     return ScriptResponse(
         task_id=task_id,
