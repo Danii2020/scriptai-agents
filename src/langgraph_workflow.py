@@ -1,7 +1,7 @@
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, END, START
-from src.crew_project.nodes.research import research_node
-from src.crew_project.nodes.screenwrite import screenwrite_node
+from src.nodes.research import research_node
+from src.nodes.screenwrite import screenwrite_node
 
 # Define the state schema
 class WorkflowState(TypedDict):

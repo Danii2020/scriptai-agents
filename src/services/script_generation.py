@@ -1,8 +1,8 @@
 import asyncio
 import os
-from src.crew_project.utils.task_manager import update_task, TaskStatus
-from src.crew_project.utils.file_utils import create_script_docx
-from src.crew_project.langgraph_workflow import run_youtube_script_workflow
+from src.utils.task_manager import update_task, TaskStatus
+from src.utils.file_utils import create_script_docx
+from src.langgraph_workflow import run_youtube_script_workflow
 
 async def run_langgraph_task(task_id: str, topic: str, tones: list, file_path: str):
     try:

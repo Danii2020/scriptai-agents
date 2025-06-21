@@ -6,10 +6,10 @@ import uuid
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from src.crew_project.utils.file_utils import save_upload_file
-from src.crew_project.utils.task_manager import tasks, TaskStatus, get_task, set_task
-from src.crew_project.models.response_models import ScriptResponse
-from src.crew_project.services.script_generation import run_langgraph_task
+from src.utils.file_utils import save_upload_file
+from src.utils.task_manager import TaskStatus, get_task, set_task
+from src.models.response_models import ScriptResponse
+from src.services.script_generation import run_langgraph_task
 
 # Load environment variables
 load_dotenv()
