@@ -18,8 +18,6 @@ load_dotenv()
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 
 # Create temp directory if it doesn't exist
-TEMP_DIR = Path("temp_uploads")
-TEMP_DIR.mkdir(exist_ok=True)
 
 app = FastAPI(
     title="YouTube Script Generator API",

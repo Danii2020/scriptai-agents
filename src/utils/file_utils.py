@@ -5,9 +5,9 @@ import uuid
 from datetime import datetime
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+import tempfile
 
-TEMP_DIR = Path("temp_uploads")
-TEMP_DIR.mkdir(exist_ok=True)
+TEMP_DIR = Path(tempfile.gettempdir())
 
 def save_upload_file(upload_file: UploadFile) -> str:
     """Save the uploaded file to a temporary location and return the path"""
@@ -31,8 +31,6 @@ def create_script_docx(script_content: str, topic: str) -> str:
     date_paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     date_paragraph.add_run(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     doc.add_paragraph(script_content)
-    temp_dir = Path("temp_docs")
-    temp_dir.mkdir(exist_ok=True)
-    file_path = temp_dir / f"script_{uuid.uuid4()}.docx"
+    file_path = TEMP_DIR / f"script_{uuid.uuid4()}.docx"
     doc.save(file_path)
     return str(file_path) 
