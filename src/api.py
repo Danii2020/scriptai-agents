@@ -50,7 +50,7 @@ async def generate_script(
         "error": None
     })
 
-    file_path = "/Users/danielerazo/Documents/yt-scripts/script-template-en.docx"
+    file_path = "template_scripts/script-template-en.docx"
     if file_name:
         file_path = await save_upload_file(file_name)
     background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path)

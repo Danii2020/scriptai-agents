@@ -26,7 +26,7 @@ async def run_langgraph_task(task_id: str, topic: str, tones: list, file_path: s
             "error": str(e)
         })
     finally:
-        if file_path and file_path != "/Users/danielerazo/Documents/yt-scripts/script-template-en.docx":
+        if file_path and file_path != "template_scripts/script-template-en.docx":
             try:
                 os.remove(file_path)
             except:
