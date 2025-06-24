@@ -2,7 +2,7 @@ from langchain_openai import ChatOpenAI
 from ..utils.prompt_builders import build_prompt, build_task_prompt
 from ..utils.tool_registry import get_tools_for_agent
 from ..utils.config_loader import load_yaml_config
-from pathlib import Path
+from src.utils.model_constants import AI_MODEL
 
 AGENTS_CONFIG = load_yaml_config('config/agents.yaml')
 TASKS_CONFIG = load_yaml_config('config/tasks.yaml')
@@ -10,7 +10,7 @@ TASKS_CONFIG = load_yaml_config('config/tasks.yaml')
 def screenwrite_node(state):
     """Screenwriting node that creates the final script."""
     print("---Screenwriting Node---")
-    llm = ChatOpenAI(model="gpt-4o-mini")
+    llm = ChatOpenAI(model=AI_MODEL)
     input_vars = {
         'topic': state['topic'],
         'tones': state['tones'],

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from typing import Optional, List
@@ -36,12 +36,21 @@ app.add_middleware(
     max_age=3600,  # Cache preflight requests for 1 hour
 )
 
+API_KEY = os.getenv("HEADER_API_KEY", "changeme")
+API_KEY_HEADER = "X-API-KEY"
+
+def verify_api_key(request: Request):
+    api_key = request.headers.get(API_KEY_HEADER)
+    if api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
 @app.post("/generate-script", response_model=ScriptResponse)
 async def generate_script(
     topic: str = Form(...),
     tones: List[str] = Form(["professional"]),
     file_name: Optional[UploadFile] = File(None),
-    background_tasks: BackgroundTasks = BackgroundTasks()
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+    _: None = Depends(verify_api_key)
 ):
     task_id = str(uuid.uuid4())
     set_task(task_id, {
@@ -61,7 +70,7 @@ async def generate_script(
     )
 
 @app.get("/task/{task_id}", response_model=ScriptResponse)
-async def get_task_status(task_id: str):
+async def get_task_status(task_id: str, _: None = Depends(verify_api_key)):
     task = get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -74,7 +83,7 @@ async def get_task_status(task_id: str):
     )
 
 @app.get("/download-script/{task_id}")
-async def download_script(task_id: str):
+async def download_script(task_id: str, _: None = Depends(verify_api_key)):
     task = get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -90,5 +99,5 @@ async def download_script(task_id: str):
     )
 
 @app.get("/health")
-async def health_check():
+async def health_check(_: None = Depends(verify_api_key)):
     return {"status": "healthy"}
