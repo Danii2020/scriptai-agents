@@ -14,8 +14,9 @@ class WorkflowState(TypedDict):
     current_year: str
     research_results: str
     final_script: str
+    platform: str
 
-def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_year: str = None) -> str:
+def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_year: str = None, platform: str = "YouTube") -> str:
     """
     Run the YouTube script workflow.
     Args:
@@ -39,7 +40,8 @@ def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_
         "file_path": file_path,
         "current_year": current_year or '2025',
         "research_results": "",
-        "final_script": ""
+        "final_script": "",
+        "platform": platform
     }
     result = graph.invoke(initial_state)
     return result.get("final_script", "No script generated")

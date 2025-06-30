@@ -49,6 +49,7 @@ async def generate_script(
     topic: str = Form(...),
     tones: List[str] = Form(["professional"]),
     file_name: Optional[UploadFile] = File(None),
+    platform: str = Form(...),
     background_tasks: BackgroundTasks = BackgroundTasks(),
     _: None = Depends(verify_api_key)
 ):
@@ -62,7 +63,7 @@ async def generate_script(
     file_path = "template_scripts/script-template-en.docx"
     if file_name:
         file_path = await save_upload_file(file_name)
-    background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path)
+    background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path, platform)
 
     return ScriptResponse(
         task_id=task_id,

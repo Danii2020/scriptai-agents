@@ -17,6 +17,7 @@ def screenwrite_node(state):
         'file_path': state['file_path'],
         'current_year': state['current_year'],
         'research_results': state.get('research_results', ''),
+        'platform': state.get('platform', '')
     }
     screenwriter_prompt = build_prompt(AGENTS_CONFIG['screenwriter'], input_vars) + '\n' + build_task_prompt(TASKS_CONFIG['screenwriting_task'], input_vars)
     from langgraph.prebuilt import create_react_agent
@@ -27,7 +28,7 @@ def screenwrite_node(state):
         name="ScreenwriterAgent"
     )
     message_content = f"""
-    Create a YouTube script for the topic: {state['topic']}
+    Create a {state.get('platform')} script for the topic: {state['topic']}
     Desired tones: {state['tones']}
     Research results: {state.get('research_results', 'No research available')}
     File path for reference: {state['file_path']}
@@ -37,4 +38,4 @@ def screenwrite_node(state):
         final_script = result["messages"][-1].content if result["messages"] else "No script generated"
     else:
         final_script = "No script generated"
-    return {"final_script": final_script} 
+    return {"final_script": final_script}

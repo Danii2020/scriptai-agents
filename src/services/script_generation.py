@@ -4,7 +4,7 @@ from src.utils.task_manager import update_task, TaskStatus
 from src.utils.file_utils import create_script_docx
 from src.langgraph_workflow import run_youtube_script_workflow
 
-async def run_langgraph_task(task_id: str, topic: str, tones: list, file_path: str):
+async def run_langgraph_task(task_id: str, topic: str, tones: list, file_path: str, platform: str):
     try:
         update_task(task_id, {"status": TaskStatus.RUNNING})
         script_content = await asyncio.to_thread(
@@ -12,7 +12,8 @@ async def run_langgraph_task(task_id: str, topic: str, tones: list, file_path: s
             topic=topic,
             tones=", ".join(tones),
             file_path=file_path,
-            current_year=None
+            current_year=None,
+            platform=platform
         )
         docx_path = create_script_docx(script_content, topic)
         update_task(task_id, {
