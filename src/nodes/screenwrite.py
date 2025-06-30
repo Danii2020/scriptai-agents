@@ -38,4 +38,11 @@ def screenwrite_node(state):
         final_script = result["messages"][-1].content if result["messages"] else "No script generated"
     else:
         final_script = "No script generated"
-    return {"final_script": final_script}
+
+    # Heuristic: if the script contains '[RESEARCH NEEDED]', trigger more research
+    needs_more_research = '[RESEARCH NEEDED]' in final_script
+    if needs_more_research:
+        # Optionally, you could extract a new research topic from the script here
+        return {"needs_more_research": True, "final_script": ""}
+    else:
+        return {"needs_more_research": False, "final_script": final_script}

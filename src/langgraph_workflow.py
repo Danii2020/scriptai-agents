@@ -15,6 +15,7 @@ class WorkflowState(TypedDict):
     research_results: str
     final_script: str
     platform: str
+    needs_more_research: bool  # New field to control iterative research
 
 def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_year: str = None, platform: str = "YouTube") -> str:
     """
@@ -32,7 +33,16 @@ def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_
     workflow.add_node("screenwrite", screenwrite_node)
     workflow.add_edge(START, "research")
     workflow.add_edge("research", "screenwrite")
-    workflow.add_edge("screenwrite", END)
+
+    # Router function for conditional edge
+    def screenwrite_router(state):
+        # If the screenwriter signals more research is needed, go to research, else END
+        if state.get("needs_more_research", False):
+            return "research"
+        return END
+
+    workflow.add_conditional_edges("screenwrite", screenwrite_router, path_map=["research", END])
+
     graph = workflow.compile()
     initial_state = {
         "topic": topic,
@@ -41,7 +51,8 @@ def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_
         "current_year": current_year or '2025',
         "research_results": "",
         "final_script": "",
-        "platform": platform
+        "platform": platform,
+        "needs_more_research": False  # Start with no extra research needed
     }
     result = graph.invoke(initial_state)
     return result.get("final_script", "No script generated")
