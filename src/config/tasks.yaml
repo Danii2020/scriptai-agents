@@ -30,8 +30,8 @@ screenwriting_task:
     to the tone and structure of that script to create a similar one using the
     new context. Write a script in a {tones} tone, as only you know how, based on that information
     and the previous script. Make sure the script has the correct duration of time that fits the format
-    of {platform}, if this is a platform like TikTok it shouldn't be a script of more than 3 minutes, otherwise
-    it could be a long script of a lot of minutes.
+    of {platform}, if this is a platform like TikTok it should be a script of 1 minute tops, otherwise
+    it could be a long script with a lot of minutes.
     # Use the `@notion_tool_langgraph()` to create a page and save
     # the title and content of the script when this is completely finished.
   expected_output: >

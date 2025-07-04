@@ -15,7 +15,10 @@ from src.services.script_generation import run_langgraph_task
 load_dotenv()
 
 # Get allowed origins from environment variable or use default
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://scriptai-taupe.vercel.app"
+]
 
 # Create temp directory if it doesn't exist
 
@@ -30,7 +33,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["POST", "OPTIONS", "GET"],
     allow_headers=["*"],
     expose_headers=["*"],
     max_age=3600,  # Cache preflight requests for 1 hour
@@ -59,8 +62,8 @@ async def generate_script(
         "result": None,
         "error": None
     })
-
-    file_path = "template_scripts/script-template-en.docx"
+    base_template_path = "template_scripts/"
+    file_path = base_template_path + ("script-template-en.docx" if platform == "youtube" else "short-script-en.docx")
     if file_name:
         file_path = await save_upload_file(file_name)
     background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path, platform)
