@@ -451,35 +451,6 @@ wheels = [
 ]
 
 [[package]]
-name = "crew-project"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "crewai", extra = ["tools"] },
-    { name = "docx2txt" },
-    { name = "langchain" },
-    { name = "langchain-tavily" },
-    { name = "langgraph" },
-    { name = "notion-client" },
-    { name = "python-docx" },
-    { name = "python-multipart" },
-    { name = "youtube-transcript-api" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "crewai", extras = ["tools"], specifier = ">=0.102.0,<1.0.0" },
-    { name = "docx2txt", specifier = ">=0.9" },
-    { name = "langchain", specifier = ">=0.3.23" },
-    { name = "langchain-tavily", specifier = ">=0.2.2" },
-    { name = "langgraph", specifier = ">=0.4.8" },
-    { name = "notion-client", specifier = ">=2.3.0" },
-    { name = "python-docx", specifier = ">=1.1.2" },
-    { name = "python-multipart", specifier = ">=0.0.20" },
-    { name = "youtube-transcript-api", specifier = ">=1.0.3" },
-]
-
-[[package]]
 name = "crewai"
 version = "0.114.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1570,6 +1541,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/52/e3/575c648a91ba0277937fb93711efdef7abe47945ff33b6aa7b03b873acbd/langsmith-0.3.32.tar.gz", hash = "sha256:3d7b1149e9fbe0f388303bc94d8deeeb822acc89cdea34f24151ea1316eb487d", size = 343541 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/67/64/87a103a6a1cdca06559b09aa270e5dbfe018df4fd1b8327ce5a720441629/langsmith-0.3.32-py3-none-any.whl", hash = "sha256:d79af299038cd13db6d53f99fdc6a7171b731702536b7635f2da132555a6bebc", size = 358248 },
+]
+
+[[package]]
+name = "limits"
+version = "5.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "deprecated" },
+    { name = "packaging" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/79/32/95d4908a730213a5db40462b0e20c1b93a688b33eade8c4981bbf0ca08de/limits-5.4.0.tar.gz", hash = "sha256:27ebf55118e3c9045f0dbc476f4559b26d42f4b043db670afb8963f36cf07fd9", size = 95423 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9f/aa/b84c06700735332017bc095182756ee9fb71db650d89b50b6d63549c6fcd/limits-5.4.0-py3-none-any.whl", hash = "sha256:1afb03c0624cf004085532aa9524953f2565cf8b0a914e48dda89d172c13ceb7", size = 60950 },
 ]
 
 [[package]]
@@ -3049,6 +3034,18 @@ wheels = [
 ]
 
 [[package]]
+name = "slowapi"
+version = "0.1.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "limits" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a0/99/adfc7f94ca024736f061257d39118e1542bade7a52e86415a4c4ae92d8ff/slowapi-0.1.9.tar.gz", hash = "sha256:639192d0f1ca01b1c6d95bf6c71d794c3a9ee189855337b4821f7f457dddad77", size = 14028 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2b/bb/f71c4b7d7e7eb3fc1e8c0458a8979b912f40b58002b9fbf37729b8cb464b/slowapi-0.1.9-py3-none-any.whl", hash = "sha256:cfad116cfb84ad9d763ee155c1e5c5cbf00b0d47399a769b227865f5df576e36", size = 14670 },
+]
+
+[[package]]
 name = "sniffio"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3093,6 +3090,37 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/8f/91/87cc71a6b10065ca0209d19a4bb575378abda6085e72fa0b61ffb2201b84/sqlalchemy-2.0.40-cp312-cp312-win32.whl", hash = "sha256:650490653b110905c10adac69408380688cefc1f536a137d0d69aca1069dc1d1", size = 2082959 },
     { url = "https://files.pythonhosted.org/packages/2a/9f/14c511cda174aa1ad9b0e42b64ff5a71db35d08b0d80dc044dae958921e5/sqlalchemy-2.0.40-cp312-cp312-win_amd64.whl", hash = "sha256:2be94d75ee06548d2fc591a3513422b873490efb124048f50556369a834853b0", size = 2108526 },
     { url = "https://files.pythonhosted.org/packages/d1/7c/5fc8e802e7506fe8b55a03a2e1dab156eae205c91bee46305755e086d2e2/sqlalchemy-2.0.40-py3-none-any.whl", hash = "sha256:32587e2e1e359276957e6fe5dad089758bc042a971a8a09ae8ecf7a8fe23d07a", size = 1903894 },
+]
+
+[[package]]
+name = "src"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "crewai", extra = ["tools"] },
+    { name = "docx2txt" },
+    { name = "langchain" },
+    { name = "langchain-tavily" },
+    { name = "langgraph" },
+    { name = "notion-client" },
+    { name = "python-docx" },
+    { name = "python-multipart" },
+    { name = "slowapi" },
+    { name = "youtube-transcript-api" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "crewai", extras = ["tools"], specifier = ">=0.102.0,<1.0.0" },
+    { name = "docx2txt", specifier = ">=0.9" },
+    { name = "langchain", specifier = ">=0.3.23" },
+    { name = "langchain-tavily", specifier = ">=0.2.2" },
+    { name = "langgraph", specifier = ">=0.4.8" },
+    { name = "notion-client", specifier = ">=2.3.0" },
+    { name = "python-docx", specifier = ">=1.1.2" },
+    { name = "python-multipart", specifier = ">=0.0.20" },
+    { name = "slowapi", specifier = ">=0.1.9" },
+    { name = "youtube-transcript-api", specifier = ">=1.0.3" },
 ]
 
 [[package]]

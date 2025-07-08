@@ -1,5 +1,5 @@
 [project]
-name = "crew_project"
+name = "src"
 version = "0.1.0"
 description = "crew-project using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
@@ -13,15 +13,16 @@ dependencies = [
     "notion-client>=2.3.0",
     "python-docx>=1.1.2",
     "python-multipart>=0.0.20",
+    "slowapi>=0.1.9",
     "youtube-transcript-api>=1.0.3",
 ]
 
 [project.scripts]
-crew_project = "crew_project.main:run"
-run_crew = "crew_project.main:run"
-train = "crew_project.main:train"
-replay = "crew_project.main:replay"
-test = "crew_project.main:test"
+src = "src.main:run"
+run_crew = "src.main:run"
+train = "src.main:train"
+replay = "src.main:replay"
+test = "src.main:test"
 
 [build-system]
 requires = ["hatchling"]

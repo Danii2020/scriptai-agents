@@ -1,15 +1,18 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from typing import Optional, List
 import uuid
 import os
-from pathlib import Path
 from dotenv import load_dotenv
 from src.utils.file_utils import save_upload_file
 from src.utils.task_manager import TaskStatus, get_task, set_task
 from src.models.response_models import ScriptResponse
 from src.services.script_generation import run_langgraph_task
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi.exception_handlers import RequestValidationError
 
 # Load environment variables
 load_dotenv()
@@ -44,13 +47,29 @@ app.add_middleware(
 API_KEY = os.getenv("HEADER_API_KEY", "changeme")
 API_KEY_HEADER = "X-API-KEY"
 
+# Initialize the rate limiter
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=[],  # No global default
+    storage_uri="memory://"
+)
+
+# Add the rate limiter middleware
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, lambda request, exc: JSONResponse(
+    status_code=429,
+    content={"detail": "Rate limit exceeded. Please try again later."}
+))
+
 def verify_api_key(request: Request):
     api_key = request.headers.get(API_KEY_HEADER)
     if api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 @app.post("/generate-script", response_model=ScriptResponse)
+@limiter.limit("10/minute;block=30 minutes")
 async def generate_script(
+    request: Request,
     topic: str = Form(...),
     tones: List[str] = Form(["professional"]),
     file_name: Optional[UploadFile] = File(None),
@@ -76,7 +95,12 @@ async def generate_script(
     )
 
 @app.get("/task/{task_id}", response_model=ScriptResponse)
-async def get_task_status(task_id: str, _: None = Depends(verify_api_key)):
+@limiter.limit("10/minute;block=30 minutes")
+async def get_task_status(
+    request: Request,
+    task_id: str,
+    _: None = Depends(verify_api_key)
+):
     task = get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
