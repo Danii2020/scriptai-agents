@@ -84,7 +84,7 @@ async def generate_script(
         "error": None
     })
     base_template_path = "template_scripts/"
-    file_path = base_template_path + ("script-template-en.docx" if platform == "youtube" else "short-script-en.docx")
+    file_path = base_template_path + ("script-template-en.docx" if platform == "YouTube" else "short-script-en.docx")
     if file_name:
         file_path = await save_upload_file(file_name)
     background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path, platform)
