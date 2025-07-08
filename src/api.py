@@ -18,7 +18,7 @@ load_dotenv()
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://scriptai-taupe.vercel.app",
-    "https://www.scriptioo.com/",
+    "https://www.scriptioo.com",
     "https://scriptioo.com"
 ]
 
