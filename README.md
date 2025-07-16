@@ -1,54 +1,128 @@
-# CrewProject Crew
+# LangGraph Video Script Generator
 
-Welcome to the CrewProject Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+This project is an AI-powered video script generator built with [LangGraph](https://github.com/langchain-ai/langgraph). It automates the process of researching a topic and generating a professional video script, using two main nodes:
+- **Research Node:** Searches the web for relevant information.
+- **Screenwriting Node:** Writes a video script based on the research.
+
+Scripts are generated in DOCX format and can be integrated with Notion for content management.
+
+---
+
+## Features
+
+- Automated web research and script writing using AI (OpenAI, LangChain, Tavily)
+- FastAPI backend with endpoints for script generation, status tracking, and download
+- Notion integration for saving scripts to your Notion workspace
+- DOCX output for easy editing and sharing
+- Rate limiting and API key authentication
+
+---
 
 ## Installation
 
-Ensure you have Python >=3.10 <3.13 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+### 1. Prerequisites
 
-First, if you haven't already, install uv:
+- Python 3.8+
+- [uv](https://docs.astral.sh/uv/) (a fast Python package manager and virtual environment tool)
 
-```bash
-pip install uv
-```
-
-Next, navigate to your project directory and install the dependencies:
-
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
-
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/crew_project/config/agents.yaml` to define your agents
-- Modify `src/crew_project/config/tasks.yaml` to define your tasks
-- Modify `src/crew_project/crew.py` to add your own logic, tools and specific args
-- Modify `src/crew_project/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+### 2. Clone the repository
 
 ```bash
-$ crewai run
+git clone <your-repo-url>
+cd langgraph_project
 ```
 
-This command initializes the crew-project Crew, assembling the agents and assigning them tasks as defined in your configuration.
+### 3. Install uv
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+Follow the [official uv installation guide](https://docs.astral.sh/uv/install/):
 
-## Understanding Your Crew
+```bash
+# For macOS (Homebrew)
+brew install astral-sh/uv/uv
 
-The crew-project Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+# Or use pipx
+pipx install uv
+```
 
-## Support
+### 4. Create a virtual environment and install dependencies
 
-For support, questions, or feedback regarding the CrewProject Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+```bash
+uv venv
+source .venv/bin/activate  # or .venv/Scripts/activate on Windows
+uv pip install -r requirements.txt
+```
 
-Let's create wonders together with the power and simplicity of crewAI.
+### 5. Set up environment variables
+
+Copy the example environment file and fill in your API keys and configuration:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and provide your actual credentials.
+
+#### Example `.env.example`:
+
+```
+# API authentication
+HEADER_API_KEY=changeme
+
+# Notion integration
+NOTION_TOKEN=your-notion-integration-token
+NOTION_DB_ID=your-notion-database-id
+
+# OpenAI API (for language model)
+OPENAI_API_KEY=your-openai-api-key
+
+# Tavily API (for web search)
+TAVILY_API_KEY=your-tavily-api-key
+
+# Model selection (optional, defaults to gpt-4.1)
+MODEL=gpt-4.1
+```
+
+---
+
+## Usage
+
+Start the FastAPI server with Uvicorn:
+
+```bash
+uvicorn src.api:app --reload
+```
+
+The API will be available at [http://localhost:8000](http://localhost:8000).
+
+### Endpoints
+
+- `POST /generate-script` — Generate a new video script
+- `GET /task/{task_id}` — Check the status of a script generation task
+- `GET /download-script/{task_id}` — Download the generated script (DOCX)
+- `GET /health` — Health check
+
+All endpoints require the `X-API-KEY` header with your `HEADER_API_KEY` value.
+
+---
+
+## Contributing
+
+This project is primarily for personal use, but contributions are welcome! Please open an issue or submit a pull request if you have suggestions or improvements.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+## Troubleshooting
+
+- Make sure all required API keys are set in your `.env` file.
+- If you encounter issues with uv, refer to the [official uv documentation](https://docs.astral.sh/uv/).
+- For FastAPI/Uvicorn issues, see the [FastAPI docs](https://fastapi.tiangolo.com/) and [Uvicorn docs](https://www.uvicorn.org/).
+
+---
+
+Let me know if you want to add or change anything!
