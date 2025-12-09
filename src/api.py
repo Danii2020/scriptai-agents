@@ -1,14 +1,13 @@
-from fastapi import FastAPI, HTTPException, BackgroundTasks, UploadFile, File, Form, Depends, Request
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends, Request, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from typing import Optional, List
-import uuid
 import os
+import json
+from pathlib import Path
 from dotenv import load_dotenv
-from src.utils.file_utils import save_upload_file
-from src.utils.task_manager import TaskStatus, get_task, set_task
-from src.models.response_models import ScriptResponse
-from src.services.script_generation import run_langgraph_task
+from src.utils.file_utils import save_upload_file, TEMP_DIR
+from src.services.script_generation import stream_langgraph_task
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -65,7 +64,7 @@ def verify_api_key(request: Request):
     if api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-@app.post("/generate-script", response_model=ScriptResponse)
+@app.post("/generate-script")
 @limiter.limit("10/minute;block=30 minutes")
 async def generate_script(
     request: Request,
@@ -73,59 +72,63 @@ async def generate_script(
     tones: List[str] = Form(["professional"]),
     file_name: Optional[UploadFile] = File(None),
     platform: str = Form(...),
-    background_tasks: BackgroundTasks = BackgroundTasks(),
     _: None = Depends(verify_api_key)
 ):
-    task_id = str(uuid.uuid4())
-    set_task(task_id, {
-        "status": TaskStatus.PENDING,
-        "result": None,
-        "error": None
-    })
     base_template_path = "template_scripts/"
     file_path = base_template_path + ("script-template-en.docx" if platform == "YouTube" else "short-script-en.docx")
     if file_name:
         file_path = await save_upload_file(file_name)
-    background_tasks.add_task(run_langgraph_task, task_id, topic, tones, file_path, platform)
 
-    return ScriptResponse(
-        task_id=task_id,
-        status=TaskStatus.PENDING
-    )
+    async def event_stream():
+        async for event in stream_langgraph_task(topic, tones, file_path, platform):
+            print(json.dumps(event))
+            yield f"data: {json.dumps(event)}\n\n"
 
-@app.get("/task/{task_id}", response_model=ScriptResponse)
-@limiter.limit("10/minute;block=30 minutes")
-async def get_task_status(
-    request: Request,
-    task_id: str,
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+@app.get("/download-script")
+async def download_script(
+    file_path: str = Query(..., description="Path to the script file (from SSE event)"),
     _: None = Depends(verify_api_key)
 ):
-    task = get_task(task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return ScriptResponse(
-        task_id=task_id,
-        status=task["status"],
-        result=task["result"],
-        error=task["error"],
-        file_path=task.get("file_path")
-    )
-
-@app.get("/download-script/{task_id}")
-async def download_script(task_id: str, _: None = Depends(verify_api_key)):
-    task = get_task(task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-    if task["status"] != TaskStatus.COMPLETED or not task.get("file_path"):
-        raise HTTPException(status_code=400, detail="Script not ready for download")
-    file_path = task["file_path"]
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Script file not found")
-    return FileResponse(
-        path=file_path,
-        filename=f"script_{task_id}.docx",
-        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
+    """
+    Download a generated script file.
+    
+    The file_path should be obtained from the 'file_path' field in the 'completed' 
+    SSE event from /generate-script endpoint.
+    """
+    # Validate that the file path is in the temp directory (security check)
+    try:
+        file_path_obj = Path(file_path).resolve()
+        temp_dir_obj = Path(TEMP_DIR).resolve()
+        
+        # Ensure the file is within the temp directory
+        if not str(file_path_obj).startswith(str(temp_dir_obj)):
+            raise HTTPException(
+                status_code=403, 
+                detail="Invalid file path. File must be in the temporary directory."
+            )
+        
+        # Check if file exists
+        if not file_path_obj.exists():
+            raise HTTPException(status_code=404, detail="Script file not found")
+        
+        # Check if it's a .docx file
+        if file_path_obj.suffix.lower() != '.docx':
+            raise HTTPException(status_code=400, detail="Invalid file type. Only .docx files are allowed.")
+        
+        # Extract filename for download
+        filename = file_path_obj.name
+        
+        return FileResponse(
+            path=str(file_path_obj),
+            filename=filename,
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error accessing file: {str(e)}")
 
 @app.get("/health")
 async def health_check(_: None = Depends(verify_api_key)):

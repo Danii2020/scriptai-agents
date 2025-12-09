@@ -1,8 +1,8 @@
-from langchain_openai import ChatOpenAI
 from ..utils.prompt_builders import build_prompt, build_task_prompt
 from ..utils.tool_registry import get_tools_for_agent
 from ..utils.config_loader import load_yaml_config
 from pathlib import Path
+from langchain_openai import ChatOpenAI
 from src.utils.model_constants import AI_MODEL
 
 AGENTS_CONFIG = load_yaml_config('config/agents.yaml')

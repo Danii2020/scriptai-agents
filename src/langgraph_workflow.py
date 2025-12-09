@@ -17,7 +17,14 @@ class WorkflowState(TypedDict):
     platform: str
     needs_more_research: bool  # New field to control iterative research
 
-def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_year: str = None, platform: str = "YouTube") -> str:
+def run_youtube_script_workflow(
+    topic: str,
+    tones: str,
+    file_path: str,
+    current_year: str = None,
+    platform: str = "YouTube",
+    return_state: bool = False,
+) -> dict:
     """
     Run the YouTube script workflow.
     Args:
@@ -55,4 +62,6 @@ def run_youtube_script_workflow(topic: str, tones: str, file_path: str, current_
         "needs_more_research": False  # Start with no extra research needed
     }
     result = graph.invoke(initial_state)
+    if return_state:
+        return result
     return result.get("final_script", "No script generated")

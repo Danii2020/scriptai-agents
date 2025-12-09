@@ -1,34 +1,44 @@
 import asyncio
 import os
-from src.utils.task_manager import update_task, TaskStatus
 from src.utils.file_utils import create_script_docx
 from src.langgraph_workflow import run_youtube_script_workflow
 
-async def run_langgraph_task(task_id: str, topic: str, tones: list, file_path: str, platform: str):
+
+async def stream_langgraph_task(topic: str, tones: list, file_path: str, platform: str):
+    """
+    Async generator that streams workflow progress and results as SSE-friendly events.
+    """
+    yield {"status": "started"}
     try:
-        update_task(task_id, {"status": TaskStatus.RUNNING})
-        script_content = await asyncio.to_thread(
+        state = await asyncio.to_thread(
             run_youtube_script_workflow,
             topic=topic,
             tones=", ".join(tones),
             file_path=file_path,
             current_year=None,
-            platform=platform
+            platform=platform,
+            return_state=True,
         )
-        docx_path = create_script_docx(script_content, topic)
-        update_task(task_id, {
-            "status": TaskStatus.COMPLETED,
-            "result": script_content,
-            "file_path": docx_path
-        })
+
+        # Emit research results once available
+        research_results = state.get("research_results", "")
+        if research_results:
+            yield {"status": "research_completed", "research_results": research_results}
+
+        final_script = state.get("final_script", "No script generated")
+        docx_path = create_script_docx(final_script, topic)
+
+        yield {
+            "status": "completed",
+            "final_script": final_script,
+            "file_path": docx_path,
+        }
     except Exception as e:
-        update_task(task_id, {
-            "status": TaskStatus.FAILED,
-            "error": str(e)
-        })
+        yield {"status": "failed", "error": str(e)}
     finally:
         if file_path and file_path != "template_scripts/script-template-en.docx":
             try:
                 os.remove(file_path)
-            except:
-                pass 
+            except Exception:
+                # Silently ignore cleanup errors
+                pass

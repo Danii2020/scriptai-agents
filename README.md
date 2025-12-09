@@ -10,7 +10,7 @@ Scripts are generated in DOCX format and can be integrated with Notion for conte
 
 ## Features
 
-- Automated web research and script writing using AI (OpenAI, LangChain, Tavily)
+- Automated web research and script writing using AI (OpenAI via LangChain, Tavily)
 - FastAPI backend with endpoints for script generation, status tracking, and download
 - Notion integration for saving scripts to your Notion workspace
 - DOCX output for easy editing and sharing
@@ -78,8 +78,8 @@ OPENAI_API_KEY=your-openai-api-key
 # Tavily API (for web search)
 TAVILY_API_KEY=your-tavily-api-key
 
-# Model selection (optional, defaults to gpt-4.1)
-MODEL=gpt-4.1
+# Model selection (optional, defaults to gpt-4o-mini)
+MODEL=gpt-4o-mini
 ```
 
 ---
