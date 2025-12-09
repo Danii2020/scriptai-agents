@@ -20,7 +20,7 @@ ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://scriptai-taupe.vercel.app",
     "https://www.scriptioo.com",
-    "https://scriptioo.com"
+    "https://scriptioo.com" 
 ]
 
 # Create temp directory if it doesn't exist
